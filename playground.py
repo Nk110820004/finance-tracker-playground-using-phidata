@@ -48,7 +48,7 @@ def read_root():
     return JSONResponse(content={"message": "Phidata Playground is up and running."})
 
 app=Playground(agents=[finance_agent,web_search_agent]).get_app()
-base_app.mount("/playground", Playground)
+base_app.mount("/playground", playground_app)
 
 # export the final app
 app = base_app
