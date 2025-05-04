@@ -16,7 +16,7 @@ phi.api_key=os.getenv("PHI_API_KEY")
 web_search_agent = Agent(
     name= "Web Search Agent",
     role= "Search the web for the information",
-    model= Groq(id= "llama3-70b-8192"),
+    model= Groq(model= "llama3-70b-8192"),
     tools= [DuckDuckGo()],
     instructions=["Always include the source of the information you find."],
     show_tools_calls=True,
@@ -27,7 +27,7 @@ web_search_agent = Agent(
 finance_agent = Agent(
     name= "Finance AI Agent",
     role= "Answer financial questions",
-    model= Groq(id= "llama3-70b-8192"),
+    model= Groq(model= "llama3-70b-8192"),
     tools=[YFinanceTools(stock_price=True, analyst_recommendations=True, stock_fundamentals=True, 
                          company_news=True,)],
     instructions=[
