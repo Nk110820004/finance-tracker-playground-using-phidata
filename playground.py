@@ -39,5 +39,8 @@ finance_agent = Agent(
 
 app=Playground(agents=[finance_agent,web_search_agent]).get_app()
  
-if __name__ == "__main__":
-    serve_playground_app("playground:app", reload=True)
+# if __name__ == "__main__":
+#     serve_playground_app("playground:app", reload=True)
+@app.get("/", include_in_schema=False)
+async def redirect_root():
+    return RedirectResponse(url="/playground")
