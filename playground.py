@@ -1,4 +1,5 @@
 import openai
+from fastapi import FastAPI
 from phi.agent import Agent
 import phi.api
 from phi.model.groq import Groq 
@@ -13,11 +14,13 @@ from fastapi.responses import RedirectResponse
 
 load_dotenv()
 
-phi.api=os.getenv("PHI_API_KEY") 
+# phi.api=os.getenv("PHI_API_KEY") 
+phi.api_key = os.getenv("PHI_API_KEY")
 web_search_agent = Agent(
     name= "Web Search Agent",
     role= "Search the web for the information",
-    model= Groq(id= "llama3-70b-8192"),
+    # model= Groq(id= "llama3-70b-8192"),
+    model=Groq(model="llama3-70b-8192"),
     tools= [DuckDuckGo()],
     instructions=["Always include the source of the information you find."],
     show_tools_calls=True,
@@ -28,7 +31,8 @@ web_search_agent = Agent(
 finance_agent = Agent(
     name= "Finance AI Agent",
     role= "Answer financial questions",
-    model= Groq(id= "llama3-70b-8192"),
+    # model= Groq(id= "llama3-70b-8192"),
+    model=Groq(model="llama3-70b-8192"),
     tools=[YFinanceTools(stock_price=True, analyst_recommendations=True, stock_fundamentals=True, 
                          company_news=True,)],
     instructions=[
@@ -38,10 +42,17 @@ finance_agent = Agent(
     markdown=True,
 )
 
-app=Playground(agents=[finance_agent,web_search_agent]).get_app()
+# app=Playground(agents=[finance_agent,web_search_agent]).get_app()
  
-# if __name__ == "__main__":
-#     serve_playground_app("playground:app", reload=True)
-@app.get("/", include_in_schema=False)
-async def redirect_root():
+# # if __name__ == "__main__":
+# #     serve_playground_app("playground:app", reload=True)
+# @app.get("/", include_in_schema=False)
+# async def redirect_root():
+#     return RedirectResponse(url="/playground")
+app = FastAPI()
+playground_app = Playground(agents=[finance_agent, web_search_agent]).get_app()
+app.mount("/playground", playground_app)  # Explicit mount
+
+@app.get("/")
+async def root():
     return RedirectResponse(url="/playground")
