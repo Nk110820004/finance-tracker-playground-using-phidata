@@ -5,6 +5,8 @@ from phi.model.groq import Groq
 from phi.model.openai import OpenAIChat
 from phi.tools.yfinance import YFinanceTools
 from phi.tools.duckduckgo import DuckDuckGo
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 import os
 import phi
@@ -38,8 +40,18 @@ finance_agent = Agent(
     show_tools_calls=True,
     markdown=True,
 )
+base_app = FastAPI()
+
+# add root route
+@base_app.get("/")
+def read_root():
+    return JSONResponse(content={"message": "Phidata Playground is up and running."})
 
 app=Playground(agents=[finance_agent,web_search_agent]).get_app()
+base_app.mount("/playground", playground_app)
+
+# export the final app
+app = base_app
  
 if __name__ == "__main__":
      serve_playground_app("playground:app", reload=True)
