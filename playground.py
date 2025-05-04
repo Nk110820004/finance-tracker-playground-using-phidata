@@ -8,7 +8,8 @@ from phi.tools.duckduckgo import DuckDuckGo
 from dotenv import load_dotenv
 import os
 import phi
-from phi.playground import Playground, serve_playground_app
+from phi.playground import Playground
+from fastapi.responses import RedirectResponse
 
 load_dotenv()
 
