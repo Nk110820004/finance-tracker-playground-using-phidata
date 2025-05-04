@@ -1,5 +1,5 @@
 import openai
-from fastapi import FastAPI
+
 from phi.agent import Agent
 import phi.api
 from phi.model.groq import Groq 
@@ -9,13 +9,11 @@ from phi.tools.duckduckgo import DuckDuckGo
 from dotenv import load_dotenv
 import os
 import phi
-from phi.playground import Playground
-from fastapi.responses import RedirectResponse
+from phi.playground import Playground, serve_playground_app
 
 load_dotenv()
 
-# phi.api=os.getenv("PHI_API_KEY") 
-phi.api_key = os.getenv("PHI_API_KEY")
+phi.api=os.getenv("PHI_API_KEY") 
 web_search_agent = Agent(
     name= "Web Search Agent",
     role= "Search the web for the information",
@@ -42,17 +40,7 @@ finance_agent = Agent(
     markdown=True,
 )
 
-# app=Playground(agents=[finance_agent,web_search_agent]).get_app()
+app=Playground(agents=[finance_agent,web_search_agent]).get_app()
  
-# # if __name__ == "__main__":
-# #     serve_playground_app("playground:app", reload=True)
-# @app.get("/", include_in_schema=False)
-# async def redirect_root():
-#     return RedirectResponse(url="/playground")
-app = FastAPI()
-playground_app = Playground(agents=[finance_agent, web_search_agent]).get_app()
-app.mount("/playground", playground_app)  # Explicit mount
-
-@app.get("/")
-async def root():
-    return RedirectResponse(url="/playground")
+if __name__ == "__main__":
+     serve_playground_app("playground:app", reload=True)
