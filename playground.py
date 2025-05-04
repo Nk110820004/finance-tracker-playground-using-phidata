@@ -12,7 +12,7 @@ from phi.playground import Playground, serve_playground_app
 
 load_dotenv()
 
-phi.api=os.getenv("PHI_API_KEY") 
+phi.api_key=os.getenv("PHI_API_KEY") 
 web_search_agent = Agent(
     name= "Web Search Agent",
     role= "Search the web for the information",
